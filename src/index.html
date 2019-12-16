@@ -1,0 +1,99 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tracker</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+        integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+        crossorigin="" />
+</head>
+
+<body>
+    <h2>LOCATOR</h2>
+    <div id='mapid' style='height:500px;'></div>
+</body>
+<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+    integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+    crossorigin=""></script>
+<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+    integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+    crossorigin=""></script>
+<script>
+    var map = L.map("mapid").setView([10.32406, -236.055468], 10);
+
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+        maxZoom: 100,
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ',
+        id: 'mapbox.streets'
+    }).addTo(map);
+
+    // add a marker in the given location
+    var lat = 10.32406;
+    var lng = -236.055468;
+    var marker = L.marker([lat, lng]).addTo(map);
+
+    // add a layer and add points
+    var myLayer = L.geoJson().addTo(map);
+
+    // geojsonFeature
+    var geojsonFeature = {
+        "type": "Feature",
+        "properties": {
+            "name": "Coors Field",
+            "amenity": "Baseball Stadium",
+            "popupContent": "This is where the Rockies play!"
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [10.32406, -236.055468]
+        }
+    };
+
+    // put the marker
+    setTimeout(function () {
+        myLayer.addData(geojsonFeature);
+    }, 1000);
+
+    // update the marker
+    setTimeout(function () {
+        // clear layer
+        myLayer.clearLayers(); // inherited from LayerGroup
+        //myLayer.addData(geojsonFeature);
+    }, 3000);
+
+    // put the marker
+    setTimeout(function () {
+        myLayer.addData(geojsonFeature);
+    }, 5000);
+
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function showPosition(position) {
+        // var coordinates = "Latitude: " + position.coords.latitude +
+        //     " Longitude: " + position.coords.longitude;
+        // console.log(coordinates)
+
+        marker.setLatLng([position.coords.latitude, position.coords.longitude]).update();
+    }
+
+    // just fooling around
+    setInterval(function () {
+        getLocation()
+        // lat = lat + ((Math.random() * 0.5) - 0.25) * 0.001;
+        // lng = lng + ((Math.random() * 1) - 0.5) * 0.001;
+        // marker.setLatLng([lat, lng]).update();
+    }, 200);
+
+</script>
+
+</html>
